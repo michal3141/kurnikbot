@@ -26,5 +26,8 @@ Bot works by clicking on PGN button to get pgn listing of the game.
 Then copying PGN to clipboard and interpreting it to get FEN from the current board position.
 The position where to click is hardcoded (also for executing mouse clicks when moving pieces...)
 This means that you need to do some adjustments in code (e.g. positions).
-If your internet connection is as laggy as mine then you probably need to modify some sleep constants.
+If your internet connection is as laggy as mine then you probably need to modify some sleep constants to make it work.
 
+Kurnik board setup to use the board (note that PGN button has to be there. Also coordinates has to be adjusted in code):
+
+![](https://github.com/michal3141/kurnikbot/blob/master/images/bot_description.png)
