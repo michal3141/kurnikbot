@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 
+"""
+    kurnikbot
+    ~~~~~~~~~~~~~~~
+    :copyright: (c) 2015 by Michal Mrowczyk.
+    :license: GNU General Public License, see LICENSE for more details.
+"""
+
 ## This is a chess playing bot for kurnik site
 ## It uses pystockfish module to handle communication with
 ## powerful open-source Stockfish engine
