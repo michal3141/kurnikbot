@@ -3,7 +3,8 @@ Chess playing bot for http://www.kurnik.pl/szachy/ using Stockfish engine writte
 Created and tested for Linux/Ubuntu.
 
 This is a chess playing bot for kurnik site. It is not meant for faint-hearted.
-You probably need to modify code to adjust it to your setup.
+You probably need to modify code to adjust it to your setup (screen resolution, 
+playing window position, connection lags and jitter...).
 It uses pystockfish module to handle communication with
 powerful open-source Stockfish engine
 Requires following additional Python modules (can be installed via pip):
@@ -28,6 +29,6 @@ The position where to click is hardcoded (also for executing mouse clicks when m
 This means that you need to do some adjustments in code (e.g. positions).
 If your internet connection is as laggy as mine then you probably need to modify some sleep constants to make it work.
 
-Kurnik board setup to use the board (note that PGN button has to be there. Also coordinates has to be adjusted in code):
+My kurnik setup when using this bot (note that PGN button has to be there. Also coordinates has to be adjusted in code):
 
 ![](https://github.com/michal3141/kurnikbot/blob/master/images/bot_description.png)
