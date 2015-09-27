@@ -1,5 +1,18 @@
 #!/usr/bin/env python
 
+## This is a chess playing bot for kurnik site
+## It uses pystockfish module to handle communication with
+## powerful open-source Stockfish engine
+## Requires following additional Python modules (can be installed via pip):
+## - pyperclip (for clipboard handling)
+## - pgn (for pgn parsing)
+## - chess (for game state representation)
+## - pymouse (for mouse events)
+## - pykeyboard (for keyboard events)
+## You need stockfish accessible via 'stockfish' from shell:
+## michal3141@ubuntu:~/python/bot$ stockfish 
+## Stockfish 270915 by Tord Romstad, Marco Costalba and Joona Kiiski
+
 import sys
 import time
 import pyperclip
@@ -14,33 +27,31 @@ class Player(object):
     BLACK = 1
 
 # Set here whatever kurnik login you are using
-me = 'lordicon'
+me = sys.argv[1]
 
-# Engine
+# Stockfish engine itself
 stock = Engine()
 
 # Mouse and Keyboard
 m = PyMouse()
 k = PyKeyboard()
 
-# Sleep time when moving
+# Sleep time when moving (between mouse clicks)
 SLEEP_TIME_MOVING = 0.1
 
-# Sleep time to get focus on PGN window
+# Sleep time to get focus on PGN window (when copying)
 SLEEP_TIME_PGN = 0.2
 
-# Some constants for clicking
-xstart = 280
-ystart = 180
-dx = dy = 70
+# Constants representing board position and size (see docs for details)
+# You can customize it to adjust to your game window position and size
+XSTART = 280
+YSTART = 180
+DX = DY = 70
 
 # Numbers from 1 to 9
 DIGITS = [str(x) for x in range(1, 10)]
 
-## for white:   for black:
-## a1 -> 0,7
-## a2 -> 0,6
-## b1 -> 1,7
+# Click on particular square sq with mouse
 def _move(sq, side):
     row = sq[0]
     col = sq[1]
@@ -50,16 +61,19 @@ def _move(sq, side):
     elif side == Player.BLACK:
         i = 7 + ord('a') - ord(row) 
         j = int(col) - 1
-    m.click(xstart + i*dx, ystart + j*dy)
+    m.click(XSTART + i*DX, YSTART + j*DY)
 
+# Click PGN button to get pgn
 def _click_pgn():
     m.click(907, 515)
     time.sleep(SLEEP_TIME_PGN)
     m.click(907, 515)
 
+# Click randomly :) to get outside PGN popup
 def _click_outside_pgn():
-    m.click(xstart, ystart)
+    m.click(XSTART, YSTART)
 
+# Copy content of PGN popup to clipboard (for game state)
 def _copy_to_clipboard():
     k.press_key('Control_L')
     k.press_key('a')
@@ -68,12 +82,14 @@ def _copy_to_clipboard():
     k.release_key('a')
     k.release_key('c')
 
+# Getting current game situation
 def get_pgn():
     _click_pgn()
     _copy_to_clipboard()
     _click_outside_pgn() 
     return pyperclip.paste()
 
+# Make move
 def make_move(move, side):
     sq1 = move[0:2]
     sq2 = move[2:4]
@@ -82,8 +98,10 @@ def make_move(move, side):
     time.sleep(SLEEP_TIME_MOVING)
     _move(sq2, side)
 
+# Listening to keyboard events
 class ClickKeyEventListener(PyKeyboardEvent):
     def tap(self, keycode, character, press):
+        # If 'n' is pressed then next move is played by allmighty SF
         if character == 'n' and press:
             print '---------------------------'
             try:
@@ -118,10 +136,12 @@ class ClickKeyEventListener(PyKeyboardEvent):
                 make_move(move, side)
             except:
                 print 'Problem playing move!'
+
+        # By pressing number from 1-9 you can set how long SF could possibly
+        # think on a particular move (in seconds)
         elif character in DIGITS and press:
             print 'pressed: ', character
             stock.movetime = int(character) * 1000
-
 
 def main():
     key_listener = ClickKeyEventListener()
